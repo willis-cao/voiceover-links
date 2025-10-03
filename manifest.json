@@ -1,0 +1,18 @@
+{
+  "manifest_version": 2,
+  "name": "VoiceOver Links",
+  "version": "1.0.0",
+  "description": "Enables screen readers to read out the destination of a link when it is focused.",
+  "author": "Willis Cao",
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+
+  "permissions": []
+}
+

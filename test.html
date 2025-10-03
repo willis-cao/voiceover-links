@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceOver Links - Test Page</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            line-height: 1.5;
+        }
+        .test-section {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>VoiceOver Links - Test Page</h1>
+    <p>Use this page to test the VoiceOver Links extension with your screen reader.</p>
+    <p><strong>Instructions:</strong> Enable your screen reader and use Tab to navigate through the links below.</p>
+    <p><strong>Expected behavior:</strong> Only <em>external links</em> should announce their destination. Same-origin andrelative links should NOT.</p>
+
+    <div class="test-section">
+        <h2>External Links (SHOULD announce destination)</h2>
+        <ul>
+            <li><a href="https://www.apple.com">Go to Apple</a></li>
+            <li><a href="https://www.mozilla.org/firefox">Visit Firefox homepage</a></li>
+            <li><a href="https://developer.mozilla.org">MDN Web Docs</a></li>
+            <li><a href="https://github.com">Explore GitHub</a></li>
+            <li><a href="http://example.com">HTTP link (non-HTTPS)</a></li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>Relative Links (should NOT announce destination)</h2>
+        <p>These are internal navigation links on the same site.</p>
+        <ul>
+            <li><a href="/about">Absolute path: /about</a></li>
+            <li><a href="./test.html">Relative path: ./test.html</a></li>
+            <li><a href="../index.html">Parent directory: ../index.html</a></li>
+            <li><a href="page.html">Same directory: page.html</a></li>
+            <li><a href="/path/to/resource">Absolute path with subdirectories</a></li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>Same-Origin Links (should NOT announce destination)</h2>
+        <p>These use the current page's origin, so they're treated as internal.</p>
+        <ul>
+            <li><a href="" id="same-origin-1">Link to current origin homepage</a></li>
+            <li><a href="" id="same-origin-2">Link to current origin /about</a></li>
+            <li><a href="" id="same-origin-3">Link to current origin /contact</a></li>
+        </ul>
+        <script>
+            // Set these to match current origin
+            const currentOrigin = window.location.origin;
+            document.getElementById('same-origin-1').href = currentOrigin + '/';
+            document.getElementById('same-origin-1').textContent += ` (${currentOrigin}/)`;
+            document.getElementById('same-origin-2').href = currentOrigin + '/about';
+            document.getElementById('same-origin-2').textContent += ` (${currentOrigin}/about)`;
+            document.getElementById('same-origin-3').href = currentOrigin + '/contact';
+            document.getElementById('same-origin-3').textContent += ` (${currentOrigin}/contact)`;
+        </script>
+    </div>
+
+    <div class="test-section">
+        <h2>Special Links (should NOT announce destination)</h2>
+        <p>These link types are excluded from processing.</p>
+        <ul>
+            <li><a href="javascript:alert('Hello')">JavaScript link</a></li>
+            <li><a href="mailto:test@example.com">Email link (mailto:)</a></li>
+            <li><a href="tel:+1234567890">Phone link (tel:)</a></li>
+            <li><a href="#section">Anchor/fragment link (#)</a></li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>External Links with Complex URLs (SHOULD announce destination)</h2>
+        <ul>
+            <li><a href="https://example.com/path/to/page?query=value&other=123">Link with query parameters</a></li>
+            <li><a href="https://subdomain.example.com/very-long-path/to/resource">Link with subdomain</a></li>
+            <li><a href="https://example.com/path-with-dashes/">Link with dashes in path</a></li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>External Links with Existing ARIA Labels (SHOULD announce destination)</h2>
+        <p>Existing ARIA labels will not be replaced.</p>
+        <ul>
+            <li><a href="https://www.example.com" aria-label="Custom label">Text that differs from label</a></li>
+            <li><a href="https://www.test.com" aria-label="Another custom label">Different text</a></li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>Dynamic Links</h2>
+        <p>Test the extension's ability to handle dynamically added content:</p>
+        <button onclick="addExternalLink()">Add External Link</button>
+        <button onclick="addInternalLink()">Add Internal Link</button>
+        <div id="dynamic-links"></div>
+    </div>
+
+    <script>
+        let externalCounter = 0;
+        let internalCounter = 0;
+        
+        function addExternalLink() {
+            externalCounter++;
+            const container = document.getElementById('dynamic-links');
+            const link = document.createElement('a');
+            link.href = `https://dynamic-external-${externalCounter}.example.com`;
+            link.textContent = `External Dynamic Link ${externalCounter} (should announce)`;
+            const wrapper = document.createElement('p');
+            wrapper.appendChild(link);
+            container.appendChild(wrapper);
+        }
+        
+        function addInternalLink() {
+            internalCounter++;
+            const container = document.getElementById('dynamic-links');
+            const link = document.createElement('a');
+            link.href = `/internal/page-${internalCounter}`;
+            link.textContent = `Internal Dynamic Link ${internalCounter} (should NOT announce)`;
+            const wrapper = document.createElement('p');
+            wrapper.appendChild(link);
+            container.appendChild(wrapper);
+        }
+    </script>
+</body>
+</html>
+
