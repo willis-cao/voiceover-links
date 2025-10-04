@@ -96,16 +96,62 @@
     </div>
 
     <div class="test-section">
+        <h2>Form Submit Buttons - External Forms (SHOULD announce destination)</h2>
+        
+        <form action="https://example.com/search" method="get">
+            <label for="search1">Search Example.com:</label>
+            <input type="text" id="search1" name="q">
+            <button type="submit">Search</button>
+        </form>
+        
+        <form action="https://api.external-service.com/submit" method="post">
+            <label for="email1">Newsletter signup:</label>
+            <input type="email" id="email1" name="email">
+            <input type="submit" value="Subscribe">
+        </form>
+        
+        <form action="https://payment-processor.com/checkout" method="post">
+            <label for="card">External payment form:</label>
+            <input type="text" id="card" name="cardnumber">
+            <button>Pay Now</button>
+        </form>
+    </div>
+
+    <div class="test-section">
+        <h2>Form Submit Buttons - Internal Forms (should NOT announce destination)</h2>
+        
+        <form action="/search" method="get">
+            <label for="search2">Internal search:</label>
+            <input type="text" id="search2" name="q">
+            <button type="submit">Search Site</button>
+        </form>
+        
+        <form action="./contact.php" method="post">
+            <label for="message">Contact form:</label>
+            <textarea id="message" name="message"></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+        
+        <form method="post">
+            <label for="comment">Form with no action (submits to current page):</label>
+            <textarea id="comment" name="comment"></textarea>
+            <input type="submit" value="Post Comment">
+        </form>
+    </div>
+
+    <div class="test-section">
         <h2>Dynamic Links</h2>
         <p>Test the extension's ability to handle dynamically added content:</p>
         <button onclick="addExternalLink()">Add External Link</button>
         <button onclick="addInternalLink()">Add Internal Link</button>
+        <button onclick="addExternalForm()">Add External Form</button>
         <div id="dynamic-links"></div>
     </div>
 
     <script>
         let externalCounter = 0;
         let internalCounter = 0;
+        let formCounter = 0;
         
         function addExternalLink() {
             externalCounter++;
@@ -126,6 +172,32 @@
             link.textContent = `Internal Dynamic Link ${internalCounter} (should NOT announce)`;
             const wrapper = document.createElement('p');
             wrapper.appendChild(link);
+            container.appendChild(wrapper);
+        }
+        
+        function addExternalForm() {
+            formCounter++;
+            const container = document.getElementById('dynamic-links');
+            const form = document.createElement('form');
+            form.action = `https://dynamic-form-${formCounter}.example.com/submit`;
+            form.method = 'post';
+            
+            const label = document.createElement('label');
+            label.textContent = `Dynamic Form ${formCounter}: `;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'data';
+            const button = document.createElement('button');
+            button.type = 'submit';
+            button.textContent = 'Submit';
+            
+            form.appendChild(label);
+            form.appendChild(input);
+            form.appendChild(button);
+            
+            const wrapper = document.createElement('div');
+            wrapper.style.marginTop = '10px';
+            wrapper.appendChild(form);
             container.appendChild(wrapper);
         }
     </script>
