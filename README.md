@@ -1,6 +1,6 @@
 # VoiceOver Links
 
-Firefox extension to add URLs to ARIA labels for external links.
+Firefox extension to add URLs to ARIA labels for external links, and forms that submit to external links.
 
 A link with:
 - Text: "GitHub"
@@ -8,6 +8,16 @@ A link with:
 
 Will be announced by screen readers as:
 > "GitHub, external link to www.github.com"
+
+A form submit button with:
+- Text: "Submit"
+- `<form action="https://payment-processor.com/checkout" method="post">`
+
+Will be announced by screen readers as:
+> "Submit, submits to external link payment-processor.com/checkout"
+
+- Ignores internal/relative links; same-origin requests
+- Keeps any existing ARIA labels
 
 ## Installation
 
